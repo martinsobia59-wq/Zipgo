@@ -218,6 +218,109 @@
                 </div>
             </div>
         </section>
+        <section
+            class="flex flex-col items-center justify-center gap-4 bg-[#FEFEFE] p-10 lg:p-20"
+        >
+            <span
+                class="rounded-xl border-x-2 border-b-2 border-orange-600 p-3 text-center font-semibold text-orange-500"
+                >TESTIMONIALS</span
+            >
+            <h3 class="text-3xl font-bold">OUR CLIENT'S FEEDBACK</h3>
+            <p>The reviews from our past clients speaks for itself.</p>
+            <div
+                ref="testimonialRef"
+                class="scrollbar-hidden grid snap-x snap-mandatory auto-cols-[49%] grid-flow-col gap-3 overflow-x-auto scroll-smooth md:auto-cols-[32%]"
+            >
+                <div
+                    v-for="(review, idx) in reviews"
+                    :key="idx"
+                    class="flex flex-col gap-5 rounded bg-[#F2F3F4] p-6 pt-6"
+                >
+                    <img :src="quote" class="h-14 w-10" alt="quote" />
+                    <p class="border-l-2 border-orange-500 pl-2 text-sm">
+                        {{ review.review }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <img :src="review.imageURL" alt="" />
+                        <div class="flex flex-col gap-1">
+                            <span class="text-lg font-bold">{{
+                                review.reviewer
+                            }}</span>
+                            <span>{{ review.reviewerRole }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section
+            class="flex flex-col items-center justify-center gap-8 bg-[#FEFEFE] p-10 md:flex-row lg:p-20"
+        >
+            <img :src="faq" class="block sm:hidden" />
+
+            <div
+                class="flex flex-col items-start justify-center gap-4 max-sm:items-center"
+            >
+                <span
+                    class="rounded-xl border-x-2 border-b-2 border-orange-600 p-3 text-center font-semibold text-orange-500"
+                    >FAQ</span
+                >
+                <h3 class="text-3xl font-bold">FREQUENTLY ASKED QUESTIONS</h3>
+                <p>
+                    These are the Answers to Questions Frequently Asked by our
+                    Clients Worldwide.
+                </p>
+
+                <div class="flex w-full flex-col gap-3">
+                    <div
+                        v-for="(faq, idx) in faqs"
+                        :key="idx"
+                        class="flex flex-col"
+                    >
+                        <button
+                            class="flex items-center gap-2 p-3 shadow"
+                            :class="{
+                                'bg-orange-500 text-white': currentFaq === idx,
+                            }"
+                            @click="toggleFaq(idx)"
+                        >
+                            <span class="flex-shrink-0">{{ idx + 1 }}.</span>
+                            <p class="grow text-left">{{ faq.question }}</p>
+                            <PlusIcon
+                                class="transition-transform duration-300"
+                                :class="{
+                                    'rotate-45 text-white': currentFaq === idx,
+                                    'text-orange-500': currentFaq !== idx,
+                                }"
+                            />
+                        </button>
+
+                        <transition name="faq-slide">
+                            <div
+                                v-if="currentFaq === idx"
+                                class="p-5 text-sm text-gray-600"
+                            >
+                                {{ faq.answer }}
+                            </div>
+                        </transition>
+                    </div>
+                </div>
+            </div>
+            <img :src="faq" class="block max-sm:hidden" />
+        </section>
+        <section
+            class="flex flex-col items-center justify-center gap-8 bg-[#FEFEFE] p-10 md:flex-row lg:p-20"
+        >
+            <div class="flex flex-col items-center justify-center gap-4">
+                <span
+                    class="rounded-xl border-x-2 border-b-2 border-orange-600 p-3 text-center font-semibold text-orange-500"
+                    >Partners</span
+                >
+                <h3 class="text-3xl font-bold">TRUSTED BY OVER 365,000</h3>
+                <p>
+                    Our Satisfied Customers and Testimonials Speaks for itself.
+                </p>
+            </div>
+        </section>
     </AppLayout>
 </template>
 
@@ -232,11 +335,14 @@ import {
     Phone,
     Plane,
     Plus,
+    PlusIcon,
     Ship,
 } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 import bg1 from '@/../../resources/images/1.png';
+import bg10 from '@/../../resources/images/10.png';
+import bg11 from '@/../../resources/images/11.png';
 import bg2 from '@/../../resources/images/2.png';
 import bg3 from '@/../../resources/images/3.jpeg';
 import bg4 from '@/../../resources/images/4.png';
@@ -244,6 +350,9 @@ import bg5 from '@/../../resources/images/5.png';
 import bg6 from '@/../../resources/images/6.png';
 import bg7 from '@/../../resources/images/7.png';
 import bg8 from '@/../../resources/images/8.png';
+import bg9 from '@/../../resources/images/9.png';
+import faq from '@/../../resources/images/faq.png';
+import quote from '@/../../resources/images/quote.png';
 import signature from '@/../../resources/images/signature.png';
 
 const items = [
@@ -290,15 +399,57 @@ const teamMembers = [
     { name: 'Jane Smith', role: 'Coordinator', imageURL: bg7 },
 ];
 
+const reviews = [
+    {
+        reviewer: 'Monish Poul',
+        reviewerRole: 'Co-Founder',
+        review: 'These guys are just the coolest logistics company ever! They exceptionally handled our complex road freight services.',
+        imageURL: bg10,
+    },
+    {
+        reviewer: 'Michel Clarck',
+        reviewerRole: 'Co-Founder',
+        review: 'The shipping process with this crew was a pleasurable exerience! They did all in time and no safety issues.',
+        imageURL: bg9,
+    },
+    {
+        reviewer: 'Angelina Matheus',
+        reviewerRole: 'Co-Founder',
+        review: 'Their performance on our project was extremely successful. As a result of this collaboration, the project was built with exceptional quality & delivered.',
+        imageURL: bg11,
+    },
+];
+
+const faqs = [
+    {
+        question: 'How do I know the status of my package?',
+        answer: 'All Packages are Given Unique Identification which can be used to Search on the Tracking Page to get the Current Location of the Package.',
+    },
+    {
+        question: 'How secured is your delivery?',
+        answer: 'We Deploy the best of Technology combined with Safety Practices for All Freights, Transportation and Logistics to ensure safe Delivery.',
+    },
+    {
+        question: 'How can I contact you?',
+        answer: 'We have a 24/7 Live Support Chat with Agents All over the Globe Ready to Assist and Attend to your Queries. Look for the Floating Chat Widget on your Screen and Chat with an Agent Now.',
+    },
+];
+
 const index = ref(0);
 const currentBg = ref(items[index.value].image);
+const currentFaq = ref<number | null>(null);
 
 const images = items.map((item) => item.image);
 const offeringRef = ref<HTMLElement | null>(null);
 const teamRef = ref<HTMLElement | null>(null);
+const testimonialRef = ref<HTMLElement | null>(null);
 
 let heroImageInterval: ReturnType<typeof setInterval>;
 let scrollInterval: ReturnType<typeof setInterval>;
+
+const toggleFaq = (idx: number) => {
+    currentFaq.value = currentFaq.value === idx ? null : idx;
+};
 
 const goToNext = () => {
     index.value = (index.value + 1) % images.length;
@@ -354,19 +505,29 @@ onMounted(() => {
     // Track scroll indices per section
     let offeringIdx = 0;
     let teamIdx = 0;
+    let testimonialIdx = 0; // 👈 NEW
 
     const scrollSpeed = 5000;
 
     scrollInterval = setInterval(() => {
         const offeringEl = offeringRef.value;
         const teamEl = teamRef.value;
+        const testimonialEl = testimonialRef.value; // 👈 NEW
 
         scrollHorizontally(offeringEl, offeringIdx);
         scrollHorizontally(teamEl, teamIdx);
+        scrollHorizontally(testimonialEl, testimonialIdx); // 👈 NEW
 
         offeringIdx = (offeringIdx + 1) % (offeringEl?.children.length || 1);
         teamIdx = (teamIdx + 1) % (teamEl?.children.length || 1);
+        testimonialIdx =
+            (testimonialIdx + 1) % (testimonialEl?.children.length || 1); // 👈 NEW
     }, scrollSpeed);
+});
+
+onBeforeUnmount(() => {
+    clearInterval(heroImageInterval);
+    clearInterval(scrollInterval);
 });
 
 onBeforeUnmount(() => {
@@ -389,5 +550,16 @@ onBeforeUnmount(() => {
 .slide-fade-leave-to {
     opacity: 0;
     transform: translateX(10px);
+}
+
+.faq-slide-enter-active,
+.faq-slide-leave-active {
+    transition: all 0.3s ease;
+}
+.faq-slide-enter-from,
+.faq-slide-leave-to {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
 }
 </style>
