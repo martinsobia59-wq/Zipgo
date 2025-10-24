@@ -2,18 +2,52 @@ on:
     push:
         branches:
             - main
-name: 🚀 Deploy website on push
+
+name: 🚀 Deploy Laravel + Inertia to Hostinger
+
 jobs:
     web-deploy:
         name: 🎉 Deploy
         runs-on: ubuntu-latest
+
         steps:
             - name: 🚚 Get latest code
               uses: actions/checkout@v2
 
+            # 🧰 Install PHP and dependencies
+            - name: ⚙️ Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.2"
+                  extensions: mbstring, bcmath, intl, pdo_mysql, sqlite3
+                  coverage: none
+
+            - name: 🧱 Install Composer dependencies
+              run: composer install --no-dev --optimize-autoloader
+
+            # ⚙️ Install Node dependencies and build assets
+            - name: 📦 Install Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+
+            - name: 🧩 Install NPM packages
+              run: npm ci
+
+            - name: 🏗️ Build front-end assets
+              run: npm run build
+
+            # 🚀 Deploy to Hostinger via FTP
             - name: 📂 Sync files
               uses: SamKirkland/FTP-Deploy-Action@4.2.0
               with:
                   server: ${{ secrets.SERVER_IP }}
-                  username: ${{ secrets.FTP_USERNAM }}
+                  username: ${{ secrets.FTP_USERNAME }}
                   password: ${{ secrets.MAIN_FTP_PASSWORD }}
+                  server-dir: /public_html
+                  exclude: |
+                      **/.git*
+                      **/.github*
+                      node_modules/**
+                      tests/**
+                      .env
