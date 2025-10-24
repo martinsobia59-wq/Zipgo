@@ -1,54 +1,66 @@
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
-name: 🚀 Deploy Laravel + Inertia to Hostinger
+name: 🚀 Deploy Laravel + Inertia (PNPM) to Hostinger
 
 jobs:
-    web-deploy:
-        name: 🎉 Deploy
-        runs-on: ubuntu-latest
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: 🚚 Get latest code
-              uses: actions/checkout@v2
+    steps:
+      # 🧭 Get latest code
+      - name: 🚚 Checkout repository
+        uses: actions/checkout@v3
 
-            # 🧰 Install PHP and dependencies
-            - name: ⚙️ Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: "8.2"
-                  extensions: mbstring, bcmath, intl, pdo_mysql, sqlite3
-                  coverage: none
+      # ⚙️ Setup PHP for Laravel
+      - name: ⚙️ Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, bcmath, intl, pdo_mysql, sqlite3
+          coverage: none
 
-            - name: 🧱 Install Composer dependencies
-              run: composer install --no-dev --optimize-autoloader
+      # 🧱 Install Composer dependencies
+      - name: 🧱 Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
 
-            # ⚙️ Install Node dependencies and build assets
-            - name: 📦 Install Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 22.9.0
-                  cache: "npm"
+      # 🧩 Setup Node + PNPM
+      - name: 🧩 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: "pnpm"
 
-            - name: 🧩 Install NPM packages
-              run: npm install
+      - name: 🧰 Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9 # use your version if different
 
-            - name: 🏗️ Build front-end assets
-              run: npm run build
+      # 📦 Install frontend dependencies
+      - name: 📦 Install PNPM packages
+        run: pnpm install --frozen-lockfile
 
-            # 🚀 Deploy to Hostinger via FTP
-            - name: 📂 Sync files
-              uses: SamKirkland/FTP-Deploy-Action@4.2.0
-              with:
-                  server: ${{ secrets.SERVER_IP }}
-                  username: ${{ secrets.FTP_USERNAM }}
-                  password: ${{ secrets.MAIN_FTP_PASSWORD }}
-                  server-dir: /public_html
-                  exclude: |
-                      **/.git*
-                      **/.github*
-                      node_modules/**
-                      tests/**
-                      .env
+      # 🏗️ Build front-end assets
+      - name: 🏗️ Build assets
+        run: pnpm run build
+
+      # 🚀 Deploy via FTP
+      - name: 📂 Deploy to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        with:
+          server: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.FTP_USERNAM }}
+          password: ${{ secrets.MAIN_FTP_PASSWORD }}
+          server-dir: /public_html
+          exclude: |
+            **/.git*
+            **/.github*
+            node_modules/**
+            tests/**
+            .env
+            storage/framework/cache/**
+            storage/framework/sessions/**
+            storage/framework/views/**
