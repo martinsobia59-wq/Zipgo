@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 🧭 Get latest code
+      # 🧭 Checkout latest code
       - name: 🚚 Checkout repository
         uses: actions/checkout@v3
 
@@ -27,19 +27,21 @@ jobs:
       - name: 🧱 Install Composer dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      # 🧩 Setup Node + PNPM
-      - name: 🧩 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: 🧰 Setup PNPM
+      # 🧩 Setup PNPM (must come before Node setup)
+      - name: 🧩 Setup PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: 9 # use your version if different
+          version: 9
+          run_install: false
 
-      # 📦 Install frontend dependencies
+      # ⚙️ Setup Node.js and cache PNPM dependencies
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.9.0
+          cache: "pnpm"
+
+      # 📦 Install dependencies using PNPM
       - name: 📦 Install PNPM packages
         run: pnpm install --frozen-lockfile
 
@@ -52,7 +54,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
           server: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.FTP_USERNAM }}
+          username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.MAIN_FTP_PASSWORD }}
           server-dir: /public_html
           exclude: |
