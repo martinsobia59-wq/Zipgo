@@ -7,39 +7,56 @@ name: 🚀 Deploy Laravel + Inertia (PNPM) to Hostinger
 
 jobs:
   web-deploy:
-    name: 🎉 Deploy
     runs-on: ubuntu-latest
+    name: 🎉 Deploy
 
     steps:
-      # 🧭 Checkout latest code
+      # 🧭 Checkout repo
       - name: 🚚 Checkout repository
         uses: actions/checkout@v3
 
-      # ⚙️ Setup PHP for Laravel
+      # ⚙️ Setup PHP
       - name: ⚙️ Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
+          php-version: 8.2
           extensions: mbstring, bcmath, intl, pdo_mysql, sqlite3
-          coverage: none
+
+      # 🧱 Cache Composer dependencies
+      - name: 💾 Cache Composer
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
       # 🧱 Install Composer dependencies
       - name: 🧱 Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --no-dev --optimize-autoloader --prefer-dist
 
-      # 🧩 Setup PNPM (must come before Node setup)
+      # 🧩 Setup PNPM
       - name: 🧩 Setup PNPM
         uses: pnpm/action-setup@v2
         with:
           version: 9
           run_install: false
 
-      # ⚙️ Setup Node.js and cache PNPM dependencies
+      # ⚙️ Setup Node.js and cache PNPM store
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.9.0
-          cache: "pnpm"
+          node-version: 22
+          cache: pnpm
+
+      # 💾 Cache node_modules (optional, but faster)
+      - name: 💾 Cache PNPM node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            .pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
 
       # 📦 Install dependencies using PNPM
       - name: 📦 Install PNPM packages
@@ -63,6 +80,3 @@ jobs:
             node_modules/**
             tests/**
             .env
-            storage/framework/cache/**
-            storage/framework/sessions/**
-            storage/framework/views/**
