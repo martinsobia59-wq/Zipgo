@@ -2,7 +2,7 @@
     <div class="sticky top-0 z-50 select-none bg-white" data-nav="true">
         <!-- Top Bar -->
         <div
-            class="bg-blue flex items-center justify-between p-10 py-4 text-white lg:px-20"
+            class="flex items-center justify-between bg-blue p-10 py-4 text-white lg:px-20"
         >
             <div class="flex items-center gap-3 text-sm">
                 <div class="flex items-center gap-2">
@@ -70,7 +70,7 @@
                     v-for="(item, i) in links"
                     :key="i"
                     :href="item.href"
-                    class="text-lg text-blue-500 transition-all duration-200 hover:text-orange-600"
+                    class="text-blue-500 text-lg transition-all duration-200 hover:text-orange-600"
                     @click="menuOpen = false"
                 >
                     {{ item.label }}
@@ -102,10 +102,10 @@ const toggleMenu = () => {
 
 const links = [
     { label: 'Home', href: '/' },
-    { label: 'About Us', href: '/about' },
-    { label: 'Services', href: '/services' },
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Contact Us', href: '/contact-us' },
+    { label: 'About Us', href: '#about' },
+    { label: 'Services', href: '#services' },
+    { label: 'FAQ', href: '#faq' },
+    { label: 'Contact Us', href: '#contact-us' },
 ];
 </script>
 

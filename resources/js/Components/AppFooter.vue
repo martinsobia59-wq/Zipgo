@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-blue/90 flex flex-col text-white">
+    <footer class="flex flex-col bg-blue/90 text-white">
         <section
             class="grid grid-cols-1 gap-7 p-10 py-6 md:grid-cols-2 md:flex-row lg:grid-cols-4 lg:px-20"
         >
@@ -21,10 +21,10 @@
             </div>
             <div class="flex flex-col gap-4">
                 <h3 class="text-2xl font-semibold underline">USEFUL LINKS</h3>
-                <Link class="flex items-center gap-2">
+                <Link href="#about" class="flex items-center gap-2">
                     <MoveRight /> About Us</Link
                 >
-                <Link class="flex items-center gap-2">
+                <Link href="#services" class="flex items-center gap-2">
                     <MoveRight /> Services</Link
                 >
                 <Link class="flex items-center gap-2">

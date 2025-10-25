@@ -58,7 +58,10 @@
                 </div>
             </div>
         </section>
-        <section class="flex flex-col gap-14 bg-[#FEFEFE] p-10 pt-0 lg:px-20">
+        <section
+            id="services"
+            class="flex flex-col gap-14 bg-[#FEFEFE] p-10 pt-0 lg:px-20"
+        >
             <div
                 class="z-10 -mt-5 flex flex-col gap-6 rounded-xl border bg-white p-9 shadow"
             >
@@ -90,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col gap-5 sm:flex-row">
+            <div id="about" class="flex flex-col gap-5 md:flex-row">
                 <img :src="bg3" class="size-[32rem]" alt="" />
                 <div class="flex flex-col gap-5 p-2 md:p-9">
                     <span
@@ -122,7 +125,9 @@
                 </div>
             </div>
             <div class="inline-flex h-1 border-t"></div>
-            <div class="flex items-center justify-between">
+            <div
+                class="mx-auto flex w-full max-w-lg items-center justify-between"
+            >
                 <Link
                     href="/about"
                     class="rounded-md bg-orange-600 p-3 text-white transition hover:bg-orange-700"
@@ -253,6 +258,7 @@
             </div>
         </section>
         <section
+            id="faq"
             class="flex flex-col items-center justify-center gap-8 bg-[#FEFEFE] p-10 md:flex-row lg:p-20"
         >
             <img :src="faq" class="block sm:hidden" />

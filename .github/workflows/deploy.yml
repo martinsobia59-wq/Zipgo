@@ -78,5 +78,4 @@ jobs:
             **/.git*
             **/.github*
             node_modules/**
-            tests/**
             .env
