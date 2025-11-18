@@ -11,7 +11,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <Phone class="text-orange-600" size="16" />
-                    <span>+1 (938) 286 0494</span>
+                    <span>support@zipgoglobalexpress.com</span>
                 </div>
             </div>
             <div class="flex items-center gap-3">
